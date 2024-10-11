@@ -4,7 +4,8 @@ require("dotenv").config();
 
 // Requiring process to use the exit method
 const process = require("process");
-console.log(process.env.MONGODB_URI);
+
+
 
 const connectDB = async () => {
   try {
