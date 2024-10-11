@@ -1,13 +1,14 @@
 // Import mongoose module:
 const mongoose = require("mongoose");
+require("dotenv").config();
+
 // Requiring process to use the exit method
 const process = require("process");
+console.log(process.env.MONGODB_URI);
 
-const dbURI =
-  "mongodb+srv://user1:mxRT34RF4543dmRF@cluster0.6y8ma.mongodb.net/";
 const connectDB = async () => {
   try {
-    await mongoose.connect(dbURI);
+    await mongoose.connect(process.env.MONGODB_URI);
     console.log("MongoDB connected successfully!");
   } catch (error) {
     console.log("MongiDB connection error: ", error.message);
