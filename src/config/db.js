@@ -4,7 +4,7 @@ const mongoose = require("mongoose");
 const process = require("process");
 
 const dbURI =
-  "mongodb+srv://user1:mxRT34RF4543dmRF@cluster0.6y8ma.mongodb.net/";
+  "mongodb+srv://user1:mxRT34RF4543dmRF@cluster0.6y8ma.mongodb.net/ChitChat";
 const connectDB = async () => {
   try {
     await mongoose.connect(dbURI);
