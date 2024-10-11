@@ -12,19 +12,12 @@ app.use(express.json());
 app.use(express.json()); // parses an incomming JSON object into JavaScript
 
 // DB connection
-const dbURI =
-  "mongodb+srv://user1:mxRT34RF4543dmRF@cluster0.6y8ma.mongodb.net/";
+const connectDB = require("./config/db");
+app.listen(process.env.PORT, () =>
+  console.log(`server is running on ${process.env.PORT}`)
+);
 
-mongoose
-  .connect(dbURI)
-  .then((result) => {
-    console.log("DB connected Successfully!");
-    // Positioned here to make sure the app doesn't start listenning before the db is connected
-    app.listen(process.env.PORT, () =>
-      console.log(`server is running on ${process.env.PORT}`)
-    );
-  })
-  .catch((err) => console.log(err));
+connectDB();
 
 // Routes:
 app.use(authRoutes);
