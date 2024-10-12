@@ -4,7 +4,7 @@ const Message = require('../models/message')
 const sendMessage = async (req, res) => {
     try {
         const { message } = req.body
-        const { receiverId } = req.params
+        const { id: receiverId } = req.params
         const senderId = req.user._id.toString()
         console.log(senderId)
 
@@ -27,10 +27,10 @@ const sendMessage = async (req, res) => {
         })
         await newMessage.save()
 
-        
-            conversation.messages.push(newMessage._id)
-            await conversation.save()
-        
+
+        conversation.messages.push(newMessage._id)
+        await conversation.save()
+
 
         res.status(201).json(newMessage)
     } catch (error) {
@@ -39,6 +39,25 @@ const sendMessage = async (req, res) => {
     }
 }
 
+const getMessage = async(req,res)=>{
+    try{
+        const {id: userToChatId } = req.params
+        const senderId = req.user._id.toString()
+
+        const conversation = await Conversation.findOne({
+            participants:{$all:[senderId,  userToChatId]}
+        }).populate("messages") //to put actual messages expect messages id
+
+        if (!conversation) return res.status(200).json([])
+
+        return res.status(200).json(conversation.messages)
+    }catch(error){
+        console.error(error.message, 'get message controller')
+        res.status(500).json({error:"Internal Server Error"})
+    }
+}
+
 module.exports = {
-    sendMessage
+    sendMessage,
+    getMessage
 }
