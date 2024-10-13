@@ -3,7 +3,9 @@ const users = require('../models/users')
 
 const auth = async (req, res, next) => {
     try {
-        const token = req.header("Authorization").replace("Bearer ", "");
+        // const token = req.header("Authorization").replace("Bearer ", "");
+
+        const token = req.cookies.jwt
         if (!token)
             //unauthorized
             return res.send(401).json({ error: "No token Provided, please join us" })

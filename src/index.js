@@ -12,6 +12,7 @@ app.use(express.json());
 
 // middleware:
 app.use(express.json()); // parses an incomming JSON object into JavaScript
+app.use(cookieParser())
 
 // DB connection
 const connectDB = require("./config/db");
@@ -22,7 +23,6 @@ app.listen(process.env.PORT, () =>
 connectDB();
 
 // //access cookies
-// app.use(cookieParser)
 
 // Routes:
 app.use(authRoutes);
