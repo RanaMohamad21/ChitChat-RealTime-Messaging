@@ -12,7 +12,6 @@ const userRoutes = require('./routes/userRoutes')
 
 
 app.use(cors());
-app.use(express.json());
 
 // middleware:
 app.use(express.json()); // parses an incomming JSON object into JavaScript

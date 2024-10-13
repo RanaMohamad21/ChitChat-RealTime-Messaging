@@ -3,7 +3,7 @@ const User = require("../models/users")
 
 const getSidebaeUsers = async (req, res) => {
     try {
-        const userId = req.user._id.toString()
+        const userId = req.user._id
         // Find all conversations where the current user is a participant
         const conversations = await conversation.find({
             participants: userId
