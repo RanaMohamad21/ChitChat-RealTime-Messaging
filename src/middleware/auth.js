@@ -15,7 +15,6 @@ const auth = async (req, res, next) => {
         if (!decoded) //unauthorized bardo
             return res.send(401).json({ error: "Invalid token, please login in again" })
 
-            console.log(decoded)
         const user = await users.findById(decoded.userId)
         if (!user) 
 			return res.status(404).json({ error: "User not found" });

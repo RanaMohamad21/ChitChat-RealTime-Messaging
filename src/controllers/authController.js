@@ -42,5 +42,7 @@ module.exports.signup_post = async (req, res) => {
 module.exports.login_post = async (req, res) => {
   const { email, password } = req.body;
   console.log(email, password);
-  res.send("Hello from login");
+  const user = await User.findOne({ email });
+  const token = generateToken(user._id, res);
+  res.send({user, token});
 };

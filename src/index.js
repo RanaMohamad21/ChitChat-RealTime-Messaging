@@ -7,6 +7,8 @@ const cookieParser = require('cookie-parser')
 const app = express();
 const authRoutes = require("./routes/AuthRouts");
 const MessageRoutes = require('./routes/MessagesRoutes')
+const userRoutes = require('./routes/userRoutes')
+
 app.use(cors());
 app.use(express.json());
 
@@ -22,8 +24,8 @@ app.listen(process.env.PORT, () =>
 
 connectDB();
 
-// //access cookies
 
 // Routes:
 app.use(authRoutes);
 app.use(MessageRoutes)
+app.use(userRoutes)
