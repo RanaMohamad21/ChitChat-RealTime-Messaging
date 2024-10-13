@@ -35,7 +35,7 @@ const userSchema = new mongoose.Schema({
     {
       type: mongoose.SchemaTypes.ObjectID,
       //? will be uncommented when the chat schema is built
-      // ref: 'Chat',
+      // ref: 'Conversation',
     },
   ],
   createdAt: {
@@ -62,7 +62,6 @@ userSchema.statics.login = async function (email, password) {
   if (user) {
     const auth = await bcrypt.compare(password, user.password);
     if (auth) {
-      
       return user;
     }
     throw Error("incorrect password");
