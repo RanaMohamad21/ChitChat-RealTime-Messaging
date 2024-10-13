@@ -6,15 +6,18 @@ const cookieParser = require('cookie-parser')
 
 const app = express();
 const authRoutes = require("./routes/AuthRouts");
+
 const MessageRoutes = require('./routes/MessagesRoutes')
 const userRoutes = require('./routes/userRoutes')
+
 
 app.use(cors());
 app.use(express.json());
 
 // middleware:
 app.use(express.json()); // parses an incomming JSON object into JavaScript
-app.use(cookieParser())
+
+app.use(cookieParser());
 
 // DB connection
 const connectDB = require("./config/db");
@@ -26,6 +29,7 @@ connectDB();
 
 
 // Routes:
-app.use(authRoutes);
+app.use(authRoutes)
 app.use(MessageRoutes)
 app.use(userRoutes)
+

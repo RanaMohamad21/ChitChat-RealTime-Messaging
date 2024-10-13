@@ -5,8 +5,6 @@ require("dotenv").config();
 // Requiring process to use the exit method
 const process = require("process");
 
-
-
 const connectDB = async () => {
   try {
     await mongoose.connect(process.env.MONGODB_URI);
