@@ -1,32 +1,28 @@
-const jwt = require('jsonwebtoken')
-const users = require('../models/users')
+const jwt = require("jsonwebtoken");
+require("dotenv").config();
 
-const auth = async (req, res, next) => {
-    try {
-        // const token = req.header("Authorization").replace("Bearer ", "");
-
-        const token = req.cookies.jwt
-        if (!token)
-            //unauthorized
-            return res.send(401).json({ error: "No token Provided, please join us" })
-
-        const decoded = jwt.verify(token, process.env.SECRET)
-
-        if (!decoded) //unauthorized bardo
-            return res.send(401).json({ error: "Invalid token, please login in again" })
-
-        const user = await users.findById(decoded.userId)
-        if (!user) 
-			return res.status(404).json({ error: "User not found" });
-
-        req.user = user
-        req.token = token
-        next()
-
-    } catch (error) {
-        console.error(error.message, 'hena fel auth')
-        res.status(500).json({ error: "Interal Server Error" })
+// This function checks if the user is authenticated before directing them to protected routes.
+const requireAuth = (req, res, next) => {
+    const token = req.cookie.jwt;
+    //  check if json web token exists & is verified:
+    if (token) {
+        // The third parameter is a callback function that is called after verification is done
+        // Its params: err-> if there is any, decodedToken-> if it is correct and got decodded
+        jwt.verify(token, process.env.JWT_SECRET, (err, decodedToken) => {
+            if (err) {
+                console.log(err.message);
+                res.redirect('login');
+            } else {
+                console.log(decodedToken);
+                next();
+            }
+        });
+    } else {
+        // User is not logged in, direct to login page
+        res.redirect("/login");
     }
-}
 
-module.exports = auth
+    next();
+};
+
+module.exports = { requireAuth };
