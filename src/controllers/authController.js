@@ -2,6 +2,7 @@ require("dotenv").config();
 const User = require("../models/users");
 const jwt = require("jsonwebtoken");
 const maxAge = 3 * 24 * 60 * 60; // token max age in seconds.
+
 function errorHandler(err) {
   let errors = { email: "", password: "", userName: "" };
 
@@ -9,7 +10,7 @@ function errorHandler(err) {
   if (err.message === "incorrect email") {
     errors.email = "that email is not registered.";
   }
-  
+
   // incorrect password
   if (err.message === "incorrect password") {
     errors.password = err.message;
@@ -31,7 +32,7 @@ function errorHandler(err) {
 }
 
 // param: user id
-function createTocken(id) {
+function createToken(id) {
   return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: maxAge });
 }
 
@@ -39,7 +40,7 @@ module.exports.signup = async (req, res) => {
   const { email, userName, password } = req.body;
   try {
     const user = await User.create({ email, userName, password });
-    const token = createTocken(user._id);
+    const token = createToken(user._id);
     res.cookie("jwt", token, {
       httpOnly: true,
       maxAge: maxAge * 1000, // max age in milli seconds
@@ -56,7 +57,7 @@ module.exports.login = async (req, res) => {
   const { email, password } = req.body;
   try {
     const user = await User.login(email, password);
-    const token = createTocken(user._id);
+    const token = createToken(user._id);
     res.cookie("jwt", token, {
       httpOnly: true,
       maxAge: maxAge * 1000, // max age in milli seconds
@@ -65,12 +66,12 @@ module.exports.login = async (req, res) => {
   } catch (err) {
     console.log(err);
     const errors = errorHandler(err);
-    res.status(400).json({errors});
+    res.status(400).json({ errors });
   }
 };
 
-module.exports.logout = (req,res)=>{
+module.exports.logout = (req, res) => {
   // remove the token
-  res.cookie('jwt', '', {maxAge: 1 });
-  res.redirect('/');
-}
+  res.cookie("jwt", "", { maxAge: 1 });
+  res.redirect("/");
+};
