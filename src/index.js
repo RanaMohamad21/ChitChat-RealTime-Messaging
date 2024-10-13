@@ -3,13 +3,14 @@ const express = require("express");
 const cors = require("cors");
 const app = express();
 const authRoutes = require("./routes/AuthRouts");
-const { default: mongoose } = require("mongoose");
+const cookieParser = require("cookie-parser");
 
 app.use(cors());
 app.use(express.json());
 
 // middleware:
 app.use(express.json()); // parses an incomming JSON object into JavaScript
+app.use(cookieParser());
 
 // DB connection
 const connectDB = require("./config/db");
@@ -21,3 +22,4 @@ connectDB();
 
 // Routes:
 app.use(authRoutes);
+
