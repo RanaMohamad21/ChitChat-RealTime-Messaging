@@ -1,28 +1,34 @@
-const jwt = require("jsonwebtoken");
-require("dotenv").config();
+ const jwt =require("jsonwebtoken");
+ const User=require( "../models/users.js");
 
-// This function checks if the user is authenticated before directing them to protected routes.
-const requireAuth = (req, res, next) => {
-  const token = req.cookie.jwt;
-  //  check if json web token exists & is verified:
-  if (token) {
-    // The third parameter is a callback function that is called after verification is done
-    // Its params: err-> if there is any, decodedToken-> if it is correct and got decodded
-    jwt.verify(token, process.env.JWT_SECRET, (err, decodedToken)=>{
-        if(err){
-            console.log(err.message);
-            res.redirect('login');
-        } else {
-            console.log(decodedToken);
-            next();
-        }
-    });
-  } else {
-    // User is not logged in, direct to login page
-    res.redirect("/login");
-  }
+const auth = async (req, res, next) => {
+	try {
+		const token = req.cookies.jwt;
 
-  next();
+		if (!token) {
+			return res.status(401).json({ error: "Unauthorized - No Token Provided" });
+		}
+
+		const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+		if (!decoded) {
+			return res.status(401).json({ error: "Unauthorized - Invalid Token" });
+		}
+
+		const user = await User.findById(decoded.userId).select("-password");
+
+		if (!user) {
+			return res.status(404).json({ error: "User not found" });
+		}
+
+		req.user = user;
+        req.token = token
+
+		next();
+	} catch (error) {
+		console.log("Error in protectRoute middleware: ", error.message);
+		res.status(500).json({ error: "Internal server error" });
+	}
 };
 
-module.exports = {requireAuth};
+module.exports = auth
