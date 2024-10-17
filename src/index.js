@@ -25,14 +25,9 @@ server.listen(process.env.PORT, () =>
 
 connectDB();
 
-<<<<<<< HEAD
-// Routes:
-app.use(authRoutes);
-=======
 
 // Routes:
 app.use(authRoutes)
 app.use(MessageRoutes)
 app.use(userRoutes)
 
->>>>>>> 8ffee28071e33cdf51d42a0943208afa2155c612
