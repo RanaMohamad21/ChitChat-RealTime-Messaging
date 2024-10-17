@@ -1,5 +1,6 @@
 const Conversation = require('../models/conversation')
 const Message = require('../models/message')
+const { getReceiverSocketId } = require('../socket/socket')
 
 const sendMessage = async (req, res) => {
     try {
@@ -25,14 +26,29 @@ const sendMessage = async (req, res) => {
             receiverId,
             message
         })
-        await newMessage.save()
+        
+        
+        
+        if(newMessage){
+            conversation.messages.push(newMessage._id);
+        }
+        // await conversation.save()
+        // await newMessage.save()
+
+        // this will run in parallel
+        await Promise.all([conversation.save(), newMessage.save()]);
+
+        // Send the new message to users:
+
+        // get the reciever socket id:
+        const receiverSocketId = getReceiverSocketId(receiverId);
+        if(receiverSocketId){
+            // Send an event to a specific client using io.to().emit():
+            io.to(receiverSocketId).emit("newMessage",newMessage);
+        }
 
 
-        conversation.messages.push(newMessage._id)
-        await conversation.save()
-
-
-        res.status(201).json(newMessage)
+        res.status(201).json(newMessage);
     } catch (error) {
         console.error(error.message, 'message controller')
         res.status(500).json({ error: 'Internal Server Error' })
