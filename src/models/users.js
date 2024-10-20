@@ -25,19 +25,19 @@ const userSchema = new mongoose.Schema({
     default: "",
   },
   status: String,
-  contactList: [
-    {
-      type: mongoose.SchemaTypes.ObjectID,
-      ref: "User",
-    },
-  ],
-  groupChats: [
-    {
-      type: mongoose.SchemaTypes.ObjectID,
-      //? will be uncommented when the chat schema is built
-      // ref: 'Conversation',
-    },
-  ],
+  // contactList: [
+  //   {
+  //     type: mongoose.SchemaTypes.ObjectID,
+  //     ref: "User",
+  //   },
+  // ],
+  // groupChats: [
+  //   {
+  //     type: mongoose.SchemaTypes.ObjectID,
+  //     //? will be uncommented when the chat schema is built
+  //     // ref: 'Conversation',
+  //   },
+  // ],
   createdAt: {
     type: Date,
     default: () => Date.now(),

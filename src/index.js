@@ -5,7 +5,8 @@ const express = require("express");
 const cors = require("cors");
 const cookieParser = require('cookie-parser')
 const authRoutes = require("./routes/AuthRouts");
-
+const path = require("path")
+const fileUpload = require('express-fileupload');
 const MessageRoutes = require('./routes/MessagesRoutes')
 const userRoutes = require('./routes/userRoutes')
 
@@ -14,6 +15,7 @@ app.use(cors());
 
 // middleware:
 app.use(express.json()); // parses an incomming JSON object into JavaScript
+app.use(fileUpload()); 
 
 app.use(cookieParser());
 
