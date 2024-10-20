@@ -7,14 +7,15 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: ["http://localhost:5173"],
+    origin: ["http://localhost:5174", "http://localhost:5173"],
     methods: ["GET", "POST"],
+    credentials: true, // Allows cookies to be sent/received
   },
 });
 
-const getReceiverSocketId = (receiverId) =>{
-  return userSocketMap[receiverId]; 
-} 
+const getReceiverSocketId = (receiverId) => {
+  return userSocketMap[receiverId];
+};
 
 // Get the online users status
 const userSocketMap = {}; // {userID: socketID}
