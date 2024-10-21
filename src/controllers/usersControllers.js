@@ -41,9 +41,9 @@ const getSidebaeUsers = async (req, res) => {
 
 const search = async (req, res) => {
     try {
-        const userId = req.user._id; 
+        const userId = req.user._id;
         const searchTerm = req.params.searched;
-        
+
         const participantIds = await getParticipants(userId);
         // Search for participants based on the search term (username or email)
         const users = await User.find({
@@ -75,7 +75,81 @@ const search = async (req, res) => {
     }
 };
 
+const filterUsers = async (req, res) => {
+    try {
+        const userId = req.user._id;
+
+        // Use aggregation to filter one-on-one conversations
+        const oneOnOneConversations = await conversation.aggregate([
+            { $match: { participants: userId } }, // Match conversations where the user is a participant
+            { $project: { participants: 1, participantCount: { $size: "$participants" } } }, // Add a field with the size of the participants array
+            { $match: { participantCount: 2 } } // Filter to conversations with exactly 2 participants
+        ]);
+
+        if (oneOnOneConversations.length > 0) {
+            // Collect the participant IDs from these filtered conversations
+            let oneOnOneParticipantIds = [];
+            oneOnOneConversations.forEach(conversation => {
+                conversation.participants.forEach(participant => {
+                    if (participant.toString() !== userId && !oneOnOneParticipantIds.includes(participant.toString())) {
+                        oneOnOneParticipantIds.push(participant.toString());
+                    }
+                });
+            });
+
+            // Fetch user details for these participants
+            const users = await User.find({ _id: { $in: oneOnOneParticipantIds } }).select("-password");
+
+            res.status(200).json(users);
+        } else {
+            res.status(200).json("You have no  conversations yet.");
+        }
+    } catch (error) {
+        console.error("Error filtering user conversations:", error.message);
+        res.status(500).json({ error: "Failed to filter user conversations." });
+    }
+};
+
+const filterGroups = async (req, res) => {
+    try {
+        const userId = req.user._id;
+
+        // Use aggregation to filter group conversations
+        const groupConversations = await conversation.aggregate([
+            { $match: { participants: userId } }, // Match conversations where the user is a participant
+            { $project: { participants: 1, participantCount: { $size: "$participants" } } }, // Add a field with the size of the participants array
+            { $match: { participantCount: { $gt: 2 } } } // Filter to conversations with more than 2 participants
+        ]);
+
+        if (groupConversations.length > 0) {
+            // Collect the participant IDs from these filtered conversations
+            let groupParticipantIds = [];
+            groupConversations.forEach(conversation => {
+                conversation.participants.forEach(participant => {
+                    if (participant.toString() !== userId && !groupParticipantIds.includes(participant.toString())) {
+                        groupParticipantIds.push(participant.toString());
+                    }
+                });
+            });
+
+            // Fetch user details for these group participants
+            const users = await User.find({ _id: { $in: groupParticipantIds } }).select("-password");
+
+            res.status(200).json(users);
+        } else {
+            res.status(200).json("You have no group conversations yet.");
+        }
+    } catch (error) {
+        console.error("Error filtering group conversations:", error.message);
+        res.status(500).json({ error: "Failed to filter group conversations." });
+    }
+};
+
+
+
 module.exports = {
     getSidebaeUsers,
     search,
+    filterGroups,
+    filterUsers
 };
