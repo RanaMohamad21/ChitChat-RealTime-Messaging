@@ -25,6 +25,7 @@ io.on("connection", (socket) => {
 
   // Take the user ID from the query object in the frontend
   const userId = socket.handshake.query.userId;
+ 
   if (userId != "undefined") userSocketMap[userId] = socket.id;
 
   // send event to all connected (online) clients:
