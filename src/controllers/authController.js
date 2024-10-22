@@ -99,10 +99,52 @@ const deleteProfile = async (req, res) => {
   }
 };
 
+
+const getProfile = async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id).select("-password");
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    res.status(200).json({ user });
+  } catch (error) {
+    console.error("Error fetching profile:", error);
+    res.status(500).json({ message: "Failed to fetch profile." });
+  }
+};
+
+// Update username
+const updateUsername = async (req, res) => {
+  const { newUsername } = req.body;
+  if (!newUsername) {
+    return res.status(400).json({ message: "Username is required." });
+  }
+
+  try {
+    const user = await User.findByIdAndUpdate(
+      req.user._id,
+      { userName: newUsername },
+      { new: true, runValidators: true }
+    ).select("-password");
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.status(200).json({ user });
+  } catch (error) {
+    console.error("Error updating username:", error);
+    res.status(500).json({ message: "Failed to update username." });
+  }
+};
+
+
 module.exports = {
   signup,
   login,
   logout,
   uploadProfile,
   deleteProfile,
+  getProfile,
+  updateUsername
 };
