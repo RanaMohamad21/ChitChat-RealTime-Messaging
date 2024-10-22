@@ -29,11 +29,11 @@ const login = async (req, res) => {
   const { email, password } = req.body;
   try {
     const user = await User.login(email, password);
-    console.log(user);
+    
 
     // Generate and send token via cookie
     const token = generateToken(user._id, res);
-    console.log(token);
+    
     // Send response with user data and token
     res.status(200).json({ user, token });
   } catch (err) {
