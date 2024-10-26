@@ -7,7 +7,7 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: ["https://real-time-messaging-mern-stack.vercel.app"],
+    origin: ["https://real-time-messaging-mern-stac-rana-mohamad-abdelsalams-projects.vercel.app","https://real-time-messagin-git-73304b-rana-mohamad-abdelsalams-projects.vercel.app"],
     methods: ["GET", "POST"],
     credentials: true, // Allows cookies to be sent/received
   },

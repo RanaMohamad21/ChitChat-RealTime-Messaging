@@ -12,7 +12,7 @@ const userRoutes = require("./routes/userRoutes");
 
 app.use(
   cors({
-    origin: ["https://real-time-messaging-mern-stack.vercel.app"], // frontend URL
+    origin: ["https://real-time-messaging-mern-stac-rana-mohamad-abdelsalams-projects.vercel.app","https://real-time-messagin-git-73304b-rana-mohamad-abdelsalams-projects.vercel.app"], // frontend URL
     credentials: true, // Allows cookies to be sent/received
   })
 );
