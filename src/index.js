@@ -12,7 +12,7 @@ const userRoutes = require("./routes/userRoutes");
 
 app.use(
   cors({
-    origin: ["http://localhost:5174", "http://localhost:5173"], // frontend URL
+    origin: ["https://real-time-messaging-mern-stack.vercel.app"], // frontend URL
     credentials: true, // Allows cookies to be sent/received
   })
 );
