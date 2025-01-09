@@ -78,5 +78,8 @@ DB_URI=your_database_uri
 Experience the live application:
 [ChitChat Demo](https://drive.google.com/file/d/1W6-XqZDMrGmQCCPjQGt1ojz2AXyKSJJY/view?usp=drive_link)
 
+## Frontend Repo
+[ChitChat frontend](https://github.com/Roaa227/ChitChat-RealTime-Messaging)
+
 ## Contributing
 We welcome contributions! Please submit a pull request or open an issue for feedback.
